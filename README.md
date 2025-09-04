@@ -25,7 +25,7 @@ Switch clusters:
 kubectl config get-contexts
 kubectl config use-context kind-k8s-demo
 ```
-## 2️⃣ Why we need exporters
+ 2️⃣ Why we need exporters
 
 Nginx serves websites (port 80)
 It has a status page (/stub_status) → shows raw stats like:
