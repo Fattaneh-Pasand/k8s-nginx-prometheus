@@ -119,7 +119,7 @@ Prometheus: Deployment on 9090, scrapes exporters using annotations + service di
 
 RBAC: lets Prometheus query Kubernetes API to discover pods/services.
 
-ConfigMap: holds scrape jobs (what to scrape).
+Prometheus yaml file(ConfigMap): holds scrape jobs (what to scrape).
 
 👉 Result: You get both node health and nginx app health metrics in one place: Prometheus.
 
