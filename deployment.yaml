@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  namespace: monitoring
+  labels:
+    app: nginx
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx
+  template:  #this is a pod template(what each pod look like)
+    metadata:
+      labels:
+        app: nginx
+      annotations: # for Prometheus service discovery
+        prometheus.io/scrape: "true"   #Prometheus should scrape this Pod.
+        prometheus.io/port: "9113"     #scrape metrics from this port
+        prometheus.io/path: "/metrics" #scrape this HTTP path
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:1.25
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - name: nginx-conf # Take a volume names nginx-conf
+              mountPath: /etc/nginx/conf.d/default.conf # Mount the file from that volume into the container at this path
+              subPath: default.conf # Only mount this specific file, not the whole folder.
+        - name: nginx-exporter
+          image: bitnami/nginx-exporter:latest
+          args:
+            - --nginx.scrape-uri=http://127.0.0.1:80/stub_status  #Go scrape nginx stats from port 80 on localhost at /stub_status
+          ports:
+            - name: metrics        #label for this port
+              containerPort: 9113  # This container listens on port 9113 inside the Pod
+      volumes:
+        - name: nginx-conf
+          configMap:
+            name: nginx-conf  #Make the contents of the ConfigMap named nginx-conf available as a volume inside the Pod
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-service
+  namespace: monitoring
+  labels:
+    app: nginx
+spec:
+  selector:
+    app: nginx
+  ports:
+    - name: http
+      port: 80
+      targetPort: 80
