@@ -49,8 +49,6 @@ Prometheus → http://nginx:80/stub_status → ❌ can’t parse
 With exporter:
 Prometheus → http://nginx-exporter:9113/metrics → ✅ gets clean metrics 
 
-:
-
 🔹 Node Exporter
 
 Runs as a DaemonSet → creates one Pod per Node in your cluster.
