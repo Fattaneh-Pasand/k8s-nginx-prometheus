@@ -1,9 +1,11 @@
 ## 📘 Kubernetes + Nginx + Prometheus (k8s-nginx-prometheus)
 
 1️⃣ Create a kind cluster
+
+```bash
 kind create cluster --name k8s-demo --config kind-cluster.yaml
 kubectl cluster-info
-
+```
 
 Kubernetes uses a kubeconfig (usually ~/.kube/config) to know:
 
@@ -19,10 +21,10 @@ gke-project-cluster → GKE
 eks-dev → AWS EKS
 
 Switch clusters:
-
+```bash
 kubectl config get-contexts
 kubectl config use-context kind-k8s-demo
-
+```
 ## 2️⃣ Why we need exporters
 
 Nginx serves websites (port 80)
@@ -63,7 +65,7 @@ node-exporter-xdhss   (runs on control-plane)
 
 Here’s what happens step by step:
 Node Exporter Pod runs on each node → listens on port 9100.
-# Example: http://10.244.1.5:9100/metrics
+Example: http://10.244.1.5:9100/metrics
 Prometheus (the server) knows from its config (ConfigMap) that:
 “Hey, scrape node-exporter targets on port 9100.”
 Prometheus goes to each Node Exporter pod’s IP:9100 and collects the metrics.
